@@ -14,28 +14,30 @@ go(directory, resizedDirectory);
 
 function go(directory, resizedDirectory) {
     var files = getFiles(directory);
-//    var latest = getFiles(directory);
+    var latest = getFiles(directory);
 
     var size = getOptimalSize(files);
     size.then(function (size) {console.log('optimal size %sx%s', size.height, size.width);});
-/*
+
     var resized = resize(files, size, directory, resizedDirectory);
-    resized.then(function () {console.log('resize done')});
+    resized.then(function () {console.log('resize done');});
 
     var median = createAverageImage(resized, resizedDirectory, "median");
     var mean = createAverageImage(resized, resizedDirectory, "mean");
+
     q.all([median, mean])
-    .then(function () {console.log('average done')});
+    .then(function () {console.log('average done');});
 
     var diffMedian = generateDiff(resized, median, "median_");
     var diffMean = generateDiff(resized, mean, "mean_");
-    var diffHistory = [];//generateDiff(files, latest, "history_");
-    q.all([diffMean, diffMedian, diffHistory])
+    var diffHistory = generateDiff(files, latest, "history_");
+
+    q.all([diffMean, diffMedian, diffHistory ])
     .then(function (difs) {
         console.log('difs ok');
     }, function (err) {
         console.log(err);
-    });*/
+    });
     serve(resizedDirectory);
 
 }
@@ -98,7 +100,7 @@ function resize(files, size, directory, resizedDirectory) {
                 .resize(size.width, size.height, "!")
                 .noProfile();
             var filename = original.replace(directory, resizedDirectory);
-            resizedPromises.push(q.ninvoke(resized, 'write', filename).promise);
+            resizedPromises.push(q.ninvoke(resized, 'write', filename));
             resizedFilenames.push(filename);
         });
 
@@ -142,14 +144,14 @@ function generateDiff(files, average, prefix) {
         var files = results[0];
         var average = results[1];
         var difPromises = [];
-        if (!average.length) {
-            average = [average];
-        }
-        console.log(average);
-        files.forEach(function (file) {
-            average.forEach(function (origin) {
-                difPromises.push(diff(file, origin, prefix));
-            });
+        files.forEach(function (file, index) {
+            var origin;
+            if (typeof average === "object") {
+                origin = average[index];
+            } else {
+                origin = average;
+            }
+            difPromises.push(diff(file, origin, prefix));
         });
 
         q.all(difPromises).then(function (compares) {
@@ -180,7 +182,7 @@ function diff(file, average, prefix) {
             });
         });
     }catch(e) {
-        console.log(e);
+        console.log('diff generation error', e);
     }
     return compare.promise;
 }
@@ -192,7 +194,8 @@ function ensureResizeDir(dest) {
 
 function prefixFile(file, prefix) {
     var last = file.lastIndexOf('/')+1;
-    return file.slice(0, last)+prefix+file.slice(last);
+    file = file.slice(0, last)+prefix+file.slice(last);
+    return file.replace(directory, resizedDirectory);
 }
 
 function serve(directory) {
