@@ -1,5 +1,6 @@
+/* global require: true, __dirname: true, process: true, console: true */
 "use strict";
-process.on('error', function (err) {console.log(err)});
+process.on('error', function (err) {console.log(err);});
 
 var directory = [__dirname, 'screenshots'].join('/');
 var resizedDirectory = [__dirname, 'resized'].join('/');
@@ -37,8 +38,8 @@ function go(directory, resizedDirectory) {
             resizer: resizer
         })).uniformize(files);
 
-    var median = createAverageImage(uniformized, resizedDirectory, "median");
-    var mean = createAverageImage(uniformized, resizedDirectory, "mean");
+    var median = createAverageImage(uniformized, repository, "median");
+    var mean = createAverageImage(uniformized, repository, "mean");
 
     q.all([median, mean])
     .then(function () {console.log('average done');});
@@ -74,11 +75,13 @@ function go(directory, resizedDirectory) {
 
 }
 
-function createAverageImage(resizedFilenames, resizedDirectory, type) {
+function createAverageImage(resizedFilenames, resizedRepository, type) {
     var exec = require('child_process').exec;
     var image = q.defer();
+    var resizedDirectory = resizedRepository.getPath();
     q.when(resizedFilenames, function (files) {
-        var filename = [resizedDirectory, 'homepage_avg-'+type+'.png'].join('/');
+        var key = 'homepage_avg-'+type+'.png';
+        var filename = [resizedRepository.getPath(), key].join('/');
         var origin = _.pluck(files, 'path');
         var command = [
             'convert'].concat(origin).concat([
@@ -91,7 +94,7 @@ function createAverageImage(resizedFilenames, resizedDirectory, type) {
                     image.reject(err);
                     return ;
                 }
-                image.resolve(filename);
+                image.resolve(resizedRepository.screenshotFactory(key));
             });
     });
     return image.promise;
@@ -109,7 +112,7 @@ function generateDiff(files, average, prefix) {
         }
         files.forEach(function (file, index) {
             var origin;
-            if (typeof average === "object") {
+            if (typeof average === "object" && average[index]) {
                 origin = average[index];
             } else {
                 origin = average;
@@ -182,7 +185,6 @@ var compiled = Handlebars.compile(template);
 
 function generateReport (data, destinationDir) {
     try {
-    console.log(data);
         fs.writeFileSync([destinationDir, 'report.html'].join('/'), compiled(data));
     } catch (e) {
         console.dir(e);

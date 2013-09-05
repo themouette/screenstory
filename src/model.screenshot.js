@@ -125,6 +125,9 @@
     Repository.prototype.fullpath = function (filename) {
         return [this.config.directory, filename].join('/');
     };
+    Repository.prototype.getPath = function () {
+        return this.config.directory;
+    };
 
     module.exports = {
         finder: Finder,
