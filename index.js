@@ -1,7 +1,6 @@
 "use strict";
 process.on('error', function (err) {console.log(err)});
 
-var size = {width: 1024,height:780};
 var directory = [__dirname, 'screenshots'].join('/');
 var resizedDirectory = [__dirname, 'resized'].join('/');
 
@@ -9,32 +8,65 @@ var q = require('q');
 var fs = require('fs');
 var _ = require('lodash');
 var gm = require('gm');
+var ScreenshotFinder = require('./src/model.screenshot').finder;
+var ScreenshotRepository = require('./src/model.screenshot').repository;
+var Resizer = require('./src/image.manipulate').resizer;
+var Uniformizer = require('./src/image.manipulate').uniformizer;
+
+q.longStackSupport = true;
 
 go(directory, resizedDirectory);
 
 function go(directory, resizedDirectory) {
-    var files = getFiles(directory);
-    var latest = getFiles(directory);
+    var start = process.hrtime();
+    var elapsed_time = function(note){
+        var precision = 3; // 3 decimal places
+        var elapsed = process.hrtime(start)[1] / 1000000; // divide by a million to get nano to milli
+        console.log(process.hrtime(start)[0] + " s, " + elapsed.toFixed(precision) + " ms - " + note); // print message + time
+    };
+    var files = (new ScreenshotFinder({
+            directory: directory
+        })).findAll();
+    var latest = (new ScreenshotFinder({
+            directory: directory
+        })).findAll();
 
-    var size = getOptimalSize(files);
-    size.then(function (size) {console.log('optimal size %sx%s', size.height, size.width);});
+    var repository = new ScreenshotRepository({ directory: resizedDirectory });
+    var resizer = new Resizer({ repository: repository });
+    var uniformized = (new Uniformizer({
+            resizer: resizer
+        })).uniformize(files);
 
-    var resized = resize(files, size, directory, resizedDirectory);
-    resized.then(function () {console.log('resize done');});
-
-    var median = createAverageImage(resized, resizedDirectory, "median");
-    var mean = createAverageImage(resized, resizedDirectory, "mean");
+    var median = createAverageImage(uniformized, resizedDirectory, "median");
+    var mean = createAverageImage(uniformized, resizedDirectory, "mean");
 
     q.all([median, mean])
     .then(function () {console.log('average done');});
 
-    var diffMedian = generateDiff(resized, median, "median_");
-    var diffMean = generateDiff(resized, mean, "mean_");
-    var diffHistory = generateDiff(files, latest, "history_");
-
-    q.all([diffMean, diffMedian, diffHistory ])
-    .then(function (difs) {
-        console.log('difs ok');
+    q.all([
+        generateDiff(uniformized, median, "median_"),
+        generateDiff(uniformized, mean, "mean_"),
+        generateDiff(files, latest, "history_"),
+        generateDiff(median, mean, "avg_")
+    ])
+    .then(function (diffs) {
+        q.all([uniformized, median, mean]).then(function (results) {
+            var uniformized = results[0];
+            var median = results[1];
+            var mean = results[2];
+            generateReport({
+                uniformized: uniformized,
+                median: median,
+                mean: mean,
+                diffs: {
+                    median: diffs[0],
+                    mean: diffs[1],
+                    history: diffs[2],
+                    average: diffs[3],
+                }
+            }, resizedDirectory);
+            elapsed_time('diffs OK');
+        });
     }, function (err) {
         console.log(err);
     });
@@ -42,92 +74,20 @@ function go(directory, resizedDirectory) {
 
 }
 
-function getFiles(directory) {
-    var filenames = q.defer();
-    fs.readdir(directory, function done(err, f) {
-        if (err) {
-            filenames.fail(err);
-        }
-        var files = [];
-        // ensure fullpath is used
-        f.forEach(function (file) {
-            files.push([directory, file].join('/'));
-        });
-        // and resolve
-        filenames.resolve(files);
-    });
-    return filenames.promise;
-}
-
-function getOptimalSize(files) {
-    var size = q.defer();
-    // when files are ready
-    q.when(files, function (files) {
-        var dimensions = [];
-        files.forEach(function (file, index) {
-            dimensions.push(q.ninvoke(gm(file), 'size'));
-        });
-        q.all(dimensions)
-        .then(function (results) {
-            var optimal = {
-                width: 0,
-                height: 0
-            };
-            results.forEach(function (tmp) {
-                optimal.width = Math.max(optimal.width, tmp.width);
-                optimal.height = Math.max(optimal.height, tmp.height);
-            });
-            size.resolve(optimal);
-        }, function (err) {
-            size.reject(err);
-        });
-    });
-    return size.promise;
-}
-
-function resize(files, size, directory, resizedDirectory) {
-    var resized = q.defer();
-    q.all([files, size])
-    .then(function (results) {
-        var files = results[0];
-        var size = results[1];
-        var resizedFilenames = [];
-        var resizedPromises = [];
-
-        ensureResizeDir(resizedDirectory);
-        files.forEach(function (original) {
-            var resized = gm(original)
-                .resize(size.width, size.height, "!")
-                .noProfile();
-            var filename = original.replace(directory, resizedDirectory);
-            resizedPromises.push(q.ninvoke(resized, 'write', filename));
-            resizedFilenames.push(filename);
-        });
-
-        q.all(resizedPromises)
-        .then(function () {
-            resized.resolve(resizedFilenames);
-        }, function (err) {
-            resized.reject(err);
-        });
-
-    });
-    return resized.promise;
-}
-
 function createAverageImage(resizedFilenames, resizedDirectory, type) {
     var exec = require('child_process').exec;
     var image = q.defer();
     q.when(resizedFilenames, function (files) {
         var filename = [resizedDirectory, 'homepage_avg-'+type+'.png'].join('/');
+        var origin = _.pluck(files, 'path');
         var command = [
-            'convert'].concat(files).concat([
+            'convert'].concat(origin).concat([
                 '-evaluate-sequence', type, filename
         ]).join(' ');
 
         exec(command, function (err, stdout, stderr) {
                 if (err) {
-                    console.error(stderr);
+                    console.error("unable to create average image\n"+stderr);
                     image.reject(err);
                     return ;
                 }
@@ -144,6 +104,9 @@ function generateDiff(files, average, prefix) {
         var files = results[0];
         var average = results[1];
         var difPromises = [];
+        if (!files.forEach) {
+            files = [files];
+        }
         files.forEach(function (file, index) {
             var origin;
             if (typeof average === "object") {
@@ -167,10 +130,12 @@ function generateDiff(files, average, prefix) {
 
 function diff(file, average, prefix) {
     var resemble = require('resemble').resemble;
-    var dest = prefixFile(file, prefix);
+    var fullname = file.path || file;
+    var dest = prefixFile(fullname, prefix);
     var compare = q.defer();
+    average = average.path || average;
     try {
-        resemble(file).compareTo(average).onComplete(function (data) {
+        resemble(fullname).compareTo(average).ignoreAntialiasing().onComplete(function (data) {
             var base64 = data.getImageDataUrl().replace('data:image/png;base64,', '');
             base64 = new Buffer(base64, 'base64');
             fs.writeFile(dest, base64, function (err) {
@@ -206,4 +171,20 @@ function serve(directory) {
         .use(express.static(directory))
         .use(express.directory(directory))
         .listen(8080);
+}
+
+var Handlebars = require('handlebars');
+var template = fs.readFileSync([__dirname, 'report'].join('/'), {
+    encoding: 'utf8',
+    flag: 'r'
+});
+var compiled = Handlebars.compile(template);
+
+function generateReport (data, destinationDir) {
+    try {
+    console.log(data);
+        fs.writeFileSync([destinationDir, 'report.html'].join('/'), compiled(data));
+    } catch (e) {
+        console.dir(e);
+    }
 }
