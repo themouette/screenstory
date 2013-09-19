@@ -112,6 +112,7 @@
     };
     // create screenshot object from filename
     Repository.prototype.screenshotFactory = function (filename) {
+        filename = this.canonize(filename);
         return {
             id: filename,
             filename: filename,
@@ -127,6 +128,17 @@
     };
     Repository.prototype.getPath = function () {
         return this.config.directory;
+    };
+    Repository.prototype.canonize = function (filename) {
+        var path = this.getPath();
+        if (filename.indexOf(path) === 0) {
+            var canonized = filename.substr(path.length);
+            if (canonized.charAt(0) === "/") {
+                return canonized.substr(1, canonized.length);
+            }
+            return canonized;
+        }
+        return filename;
     };
 
     module.exports = {
