@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style type="text/css" media="screen">
+            .thumbnail {
+                width: 200px;
+                padding: 10px;
+                margin: 10px;
+                border: 1px solid #000;
+                display: inline-block;
+                vertical-align: top;
+            }
+            .m-screenshot {
+                display: inline-block;
+                vertical-align: top;
+            }
+            .m-average {
+                display: inline-block;
+                vertical-align: top;
+                float:left;
+                width: 340px;;
+                box-sizing: border-box;
+            }
+            .m-average .thumbnail {
+                width: 300px;
+            }
+            .thumbnail.last {
+                clear: right;
+            }
+            img {
+                width: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="m-average">
+            <div class="thumbnail">
+                {{#with diffs.average.[0]}}
+                <img src="{{filename}}" alt="average" title="Avg" />
+                <legend>Difference between both average ({{misMatchPercentage}} %)</legend>
+                {{/with}}
+            </div>
+            <div class="thumbnail">
+                <img src="homepage_avg-mean.png" alt="average" title="Avg" />
+                <legend>Average using mean</legend>
+            </div>
+            <div class="thumbnail">
+                <img src="homepage_avg-median.png" alt="average" title="Avg" />
+                <legend>Average using median</legend>
+            </div>
+        </div>
+        <div class="m-screenshot">
+            {{#each ./diffs}}
+                <div>
+                    <h3>{{@key}}</h3>
+                        {{#each this}}
+                        <div class="thumbnail">
+                            <img src="{{./filename}}" alt="diffs" title="Diff" />
+                            <legend>{{@index}}: {{./diff.misMatchPercentage}} %</legend>
+                        </div>
+                        {{/each}}
+                </div>
+            {{/each}}
+            <h3>raw</h3>
+            <div class="thumbnail">
+                <img src="homepage_chrome.png" alt="chrome" title="chrome" />
+                <legend>Chrome</legend>
+            </div>
+            <div class="thumbnail">
+                <img src="homepage_firefox.png" alt="firefox" title="firefox" />
+                <legend>Firefox</legend>
+            </div>
+            <div class="thumbnail last">
+                <img src="homepage_internet-explorer.png" alt="internet explorer" title="internet explorer" />
+                <legend>IE</legend>
+            </div>
+        </div>
+    </body>
+</html>
