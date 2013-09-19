@@ -1,4 +1,4 @@
-/* global require: true, __dirname: true, process: true, console: true */
+/* global require: true, __dirname: true, process: true, console: true, Buffer: true */
 "use strict";
 process.on('error', function (err) {console.log(err);});
 
@@ -45,10 +45,10 @@ function go(directory, resizedDirectory) {
     .then(function () {console.log('average done');});
 
     q.all([
-        generateDiff(uniformized, median, "median_"),
-        generateDiff(uniformized, mean, "mean_"),
-        generateDiff(files, latest, "history_"),
-        generateDiff(median, mean, "avg_")
+        generateDiff(repository, uniformized, median, "median_"),
+        generateDiff(repository, uniformized, mean, "mean_"),
+        generateDiff(repository, files, latest, "history_"),
+        generateDiff(repository, median, mean, "avg_")
     ])
     .then(function (diffs) {
         q.all([uniformized, median, mean]).then(function (results) {
@@ -100,7 +100,7 @@ function createAverageImage(resizedFilenames, resizedRepository, type) {
     return image.promise;
 }
 
-function generateDiff(files, average, prefix) {
+function generateDiff(diffRepository, files, average, prefix) {
     var difs = q.defer();
     q.all([files, average])
     .then(function (results) {
@@ -117,7 +117,7 @@ function generateDiff(files, average, prefix) {
             } else {
                 origin = average;
             }
-            difPromises.push(diff(file, origin, prefix));
+            difPromises.push(diff(diffRepository, file, origin, prefix));
         });
 
         q.all(difPromises).then(function (compares) {
@@ -131,7 +131,7 @@ function generateDiff(files, average, prefix) {
     return difs.promise;
 }
 
-function diff(file, average, prefix) {
+function diff(diffRepository, file, average, prefix) {
     var resemble = require('resemble').resemble;
     var fullname = file.path || file;
     var dest = prefixFile(fullname, prefix);
@@ -146,7 +146,9 @@ function diff(file, average, prefix) {
                     compare.reject(err);
                     return;
                 }
-                compare.resolve(data);
+                var image = diffRepository.screenshotFactory(dest);
+                image.diff = data;
+                compare.resolve(image);
             });
         });
     }catch(e) {
@@ -167,7 +169,7 @@ function prefixFile(file, prefix) {
 }
 
 function serve(directory) {
-    console.log('start server.');
+    console.log('start server on port 8080.');
     var express = require('express');
 
     var app = express()
