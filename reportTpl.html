@@ -1,0 +1,85 @@
+<html>
+<head><title>Results for <%= browserName %></title></head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/foundation/5.2.2/css/foundation.min.css"></link>
+<script src="http://cdn.jsdelivr.net/modernizr/2.8.1/modernizr.min.js"></script>
+<style>
+    p.clearing-caption {background-color: transparent; color: transparent}
+    p.clearing-caption:hover {background-color: rgba(0,0,0,0.6); color: #fff}
+</style>
+<body>
+    <div class="contain-to-grid fixed">
+        <nav class="top-bar" data-topbar>
+            <ul class="title-area">
+                <li class="name">
+                <h1><a href="#results">Results for <%= browserName %></a></h1>
+                </li>
+                <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+                <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+            </ul>
+            <section class="top-bar-section">
+                <ul class="right"></ul>
+                <ul class="right"></ul>
+            </section>
+        </nav>
+    </div>
+
+    <div style="padding-top: 40px;position:relative;">
+        <div class="row">
+
+            <div class="columns small-12 large-3" style="padding-bottom: 30px;">
+                <div style="position:fixed">
+                <ul class="side-nav">
+                    <% _.each(data, function (stories) { %>
+                        <li>
+                        <a href="#<%= stories.title %>"><%= stories.title %></a>
+                        </li>
+                    <% }) %>
+                        <li>
+                        <a href="#all-screenshots">All Screenshots</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li class="padding-top: 10px;"><a href="./" class="button secondary expand">back</a></li>
+                </ul>
+                </div>
+            </div>
+            <div class="columns small-12 large-9">
+                <% _.each(data, function (stories) { %>
+                    <h3 id="<%= stories.title %>"><%= stories.title %></h3>
+                    <ul class="clearing-thumbs small-block-grid-2 large-block-grid-4" data-clearing>
+                    <% _.each(stories.screenshots, function (item) { %>
+                        <li>
+                           <a href="<%= item.url %>" class="th">
+                               <img data-caption="<%= item.title %>" alt="<%= item.title %>" title="<%= item.title %>", src="<%= item.url %>" />
+                               <p class="text-center"><small><%= item.title %></small></p>
+                           </a>
+                        </li>
+                    <% }) %>
+                    </ul>
+                    <p class="text-right"><a href="#results" class="button small">back to top</a></p>
+                <% }) %>
+                <h3 id="all-screenshots">All</h3>
+                <ul class="clearing-thumbs small-block-grid-2 large-block-grid-4" data-clearing>
+                <% _.each(data, function (stories) { %>
+                    <% _.each(stories.screenshots, function (item) { %>
+                        <li>
+                           <a href="<%= item.url %>" class="th">
+                               <img data-caption="<%= item.id %>" alt="<%= item.id %>" title="<%= item.id %>", src="<%= item.url %>" />
+                               <p class="text-center"><small><%= item.id %></small></p>
+                           </a>
+                        </li>
+                    <% }) %>
+                <% }) %>
+               </ul>
+               <p class="text-right"><a href="#results" class="button small">back to top</a></p>
+            </div>
+        </div>
+    </div>
+    <script src="http://cdn.jsdelivr.net/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.jsdelivr.net/foundation/5.2.2/js/foundation.min.js"></script>
+    <script>
+        $(document).foundation();
+    </script>
+</div>
+</body>
+</html>
