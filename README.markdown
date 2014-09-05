@@ -1,5 +1,8 @@
 ## Screenstory
 
+[![Build
+Status](https://travis-ci.org/themouette/screenstory.svg?branch=master)](https://travis-ci.org/themouette/screenstory)
+
 A cli to run webdriverio tests on several browsers.
 
 ``` bash
