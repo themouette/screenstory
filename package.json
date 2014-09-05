@@ -5,7 +5,7 @@
   "main": "index.js",
   "repository": "https://github.com/themouette/screenstory.git",
   "scripts": {
-    "test": "./bin/screenstory.js samples/github.js --global assert --extension samples/extensions/foo.js"
+    "test": "./bin/screenstory.js --timeout 20000 samples/github.js --global assert --extension samples/extensions/foo.js"
   },
   "author": "themouette",
   "license": "MIT",
