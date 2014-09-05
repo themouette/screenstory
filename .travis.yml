@@ -4,4 +4,4 @@ node_js:
   - "0.10"
 
 before_install:
-  - "npm install wdm ; wdm update ; wdm start &"
+  - "npm install wdm ; wdm update ; wdm start > /dev/null &"
