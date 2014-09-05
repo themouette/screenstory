@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "description": "cross browser screenshots reports",
   "main": "index.js",
-  "repository": "https://github.com/themouette/screenstory.git"
+  "repository": "https://github.com/themouette/screenstory.git",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "screenstory samples/github.js --global assert --extension samples/extensions/foo.js"
   },
   "author": "themouette",
   "license": "MIT",
@@ -17,5 +17,8 @@
     "lodash": "^2.4.1",
     "mocha": "^1.21.4",
     "webdriverio": "^2.2.0"
+  },
+  "bin": {
+    "screenstory": "./bin/screenstory.js"
   }
 }

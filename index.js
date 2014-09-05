@@ -85,6 +85,7 @@ module.exports = function (screenshotsDir) {
 };
 
 function dasherize(str){
+    if (!str) return str;
     return str.trim().replace(/([A-Z])/g, '-$1').replace(/[-_\s]+/g, '-').toLowerCase();
 }
 
@@ -94,13 +95,15 @@ function groupByBrowser(data) {
 
 function groupByStory(data) {
     var stories = {};
-    return _.map(data, function (screenshot) {
+    _.each(data, function (screenshot) {
         stories[screenshot.storyId] = stories[screenshot.storyId] || {
             title: screenshot.story || screenshot.storyId,
             screenshots: []
         };
         stories[screenshot.storyId].screenshots.push(screenshot);
     });
+
+    return stories;
 }
 
 function prepareData(destFile, data) {
