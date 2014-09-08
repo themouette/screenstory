@@ -20,5 +20,8 @@
   },
   "bin": {
     "screenstory": "./bin/screenstory.js"
+  },
+  "devDependencies": {
+    "verror": "^1.4.0"
   }
 }
