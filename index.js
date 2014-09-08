@@ -126,7 +126,7 @@ function prepareData(destFile, data) {
 }
 
 function generateBrowserReport(destFile, browserName, data) {
-    var tpl = fs.readFileSync('./reportTpl.html');
+    var tpl = fs.readFileSync(path.join(__dirname, 'reportTpl.html'));
     tpl = _.template(tpl);
 
     var html = tpl({
