@@ -7,7 +7,8 @@ var Mocha = require('mocha'),
     glob = require('glob'),
     path = require('path'),
     webdriverjs = require('webdriverio'),
-    screenstory = require('../index');
+    screenstory = require('../index'),
+    VError = require('verror');
 
 
 function parseCapabilities(capabilities) {
@@ -176,16 +177,23 @@ function addExtension(client, extensionName) {
 }
 
 function searchModule(moduleName) {
+    var err;
     try {
         // try as a module
         return require(moduleName);
-    } catch (e) {
+    } catch (e1) {
+        err = new VError(e1, 'search module');
         try {
             // try in path
-            return require(path.join(process.env.PWD, moduleName));
-        } catch (e) {
+            return require(path.join(process.cwd(), moduleName));
+        } catch (e2) {
             // last chance: in screenstory directory
-            return require(path.join(__dirname, '..', moduleName));
+            err = new VError(e2, err.message);
+            try {
+                return require(path.join(__dirname, '..', moduleName));
+            } catch (e3) {
+                throw new VError(e3, err.message);
+            }
         }
     }
 }
