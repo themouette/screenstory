@@ -66,9 +66,14 @@ module.exports = {
 };
 ```
 
-Declare an extension that will be renewed for every test file
+Declare an extension that will be executed once at load time
+
 ``` javascript
-module.exports = function () {
+module.exports = function (runner, options) {
+    // runner is the screenstory runner instance
+    // options are the one provided to cli
+    runner.on('setup', function doSomething(next) { });
+    runner.on('done', function doSomething(failures, next) { });
     return {
         bar: function (cb) {
             cb();
