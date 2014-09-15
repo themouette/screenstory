@@ -7,7 +7,7 @@ var Mocha = require('mocha'),
     glob = require('glob'),
     path = require('path'),
     webdriverjs = require('webdriverio'),
-    screenstory = require('../index'),
+    screenstory = require('../lib/screenstory'),
     VError = require('verror');
 
 
@@ -37,7 +37,7 @@ program
     .usage('[options] <files ...>')
 
     .option('-u, --url [http://localhost:1337]', 'Specify test url [http://localhost:1337]', 'http://localhost:1337')
-    .option('-s, --screenshots [tests/screenshots]', 'Specify screenshot destination', 'tests/screenshots')
+    .option('-s, --screenshot-root [tests/screenshots]', 'Specify screenshot destination [tests/screenshots]', 'tests/screenshots')
 
     // selenium related options
     .option('-c, --wd-capabilities <phantomjs>', 'Specify desired capabilities (accept JSON or browserName)', parseCapabilities, parseCapabilities('phantomjs'))
@@ -50,9 +50,11 @@ program
     .option('-r, --wd-resolution [1024x768]', 'Specify window resolution (px)', parseResolution)
 
     .option('--browserstack', 'Use browserstack')
-    .option('--saucelabs', 'Use browserstack')
+    .option('--saucelabs', 'Use saucelabs')
+    .option('--without-screenstory', 'Do not include screenstory extension')
 
     .option('-t, --timeout <10000>', 'Set timeout', parseInt, 10000)
+    .option('--reporter <spec>', 'Mocha reporter [spec]', 'spec')
     .option('--global <module>', 'Require <module> and add it to global path', collect, [])
     .option('--extension <module>', 'Require <module> a client extension', collect, [])
 
@@ -66,7 +68,14 @@ program
     })
     .parse(process.argv);
 
-launch(program);
+// Add screenstory extension
+if (!program.ignoreScreenstory) {
+    program.extension.push(path.resolve(path.join(__dirname, '..', 'extensions', 'screenstory')));
+}
+var Runner = require('../lib/runner');
+var runner = new Runner(program);
+runner.run();
+//launch(program);
 
 function launch(options) {
     var mocha = new Mocha();

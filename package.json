@@ -12,6 +12,8 @@
   "dependencies": {
     "chai": "^1.9.1",
     "commander": "^2.3.0",
+    "debug": "^2.0.0",
+    "es6-promise": "^1.0.0",
     "fs-extra": "^0.11.1",
     "glob": "^4.0.5",
     "lodash": "^2.4.1",
