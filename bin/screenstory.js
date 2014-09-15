@@ -131,7 +131,7 @@ function launch(options) {
             }
 
             // add extensions
-            require('../extensions')(client, thestory);
+            require('../extensions/screenstory.js')(client, thestory);
 
             // add extensions
             program.extension.forEach(function (extensionName) {
