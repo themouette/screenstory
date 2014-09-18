@@ -18,8 +18,9 @@
     "glob": "^4.0.5",
     "lodash": "^2.4.1",
     "mocha": "^1.21.4",
-    "webdriverio": "^2.2.0",
-    "verror": "^1.4.0"
+    "morph": "^0.2.0",
+    "verror": "^1.4.0",
+    "webdriverio": "^2.2.0"
   },
   "bin": {
     "screenstory": "./bin/screenstory.js"
