@@ -1,12 +1,13 @@
 var debug           = require('debug')('screenstory:screenstory');
 var Promise         = require('es6-promise').Promise;
+//var webdrivercss    = require('webdrivercss');
 
 module.exports = function (runner, options) {
     'use strict';
     var screenstory = require('../lib/screenstory')(options.screenshotRoot);
     debug('Create screenstory object...');
 
-    runner.on('done',function (failures, next) {
+    runner.on('report',function (failures, next) {
         debug('+  generate report');
         screenstory.generateReport(function (err, reports) {
             debug('+  generated reports', reports);
@@ -14,10 +15,14 @@ module.exports = function (runner, options) {
         });
     });
 
+    runner.on('new client', function (client, next) {
+        //webdrivercss.init(client);
+    });
+
     return {
         'screenstory': function (id, cb) {
-            this.screenshot(function addToScreenstory(err, image) {
-                if (err) return cb(err);
+            this.screenshot(id, function addToScreenstory(err, image) {
+                if (err) { return cb(err); }
                 var options = {
                     id: id,
                     capabilities: this.desiredCapabilities,

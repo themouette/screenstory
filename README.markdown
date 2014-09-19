@@ -81,3 +81,9 @@ module.exports = function (runner, options) {
     }
 }
 ```
+
+## Runner events
+
+* setup
+* report
+* done

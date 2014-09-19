@@ -20,6 +20,7 @@
     "mocha": "^1.21.4",
     "morph": "^0.2.0",
     "verror": "^1.4.0",
+    "webdrivercss": "^0.3.0",
     "webdriverio": "^2.2.0"
   },
   "bin": {
