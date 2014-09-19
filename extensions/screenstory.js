@@ -20,11 +20,11 @@ module.exports = function (runner, options) {
     });
 
     return {
-        'screenstory': function (id, cb) {
-            this.screenshot(id, function addToScreenstory(err, image) {
+        'screenstory': function (title, cb) {
+            this.screenshot(function addToScreenstory(err, image) {
                 if (err) { return cb(err); }
                 var options = {
-                    id: id,
+                    title: title,
                     capabilities: this.desiredCapabilities,
                     storyId: this.screenstoryId
                 };
