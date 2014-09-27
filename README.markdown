@@ -82,8 +82,14 @@ module.exports = function (runner, options) {
 }
 ```
 
+### Bundled Extensions
+
+* Chai: a [chaijs](http://chaijs.com/) based extension to add some assertions
+* Screenstory: the default screenstory extension
+
 ## Runner events
 
-* setup
-* report
-* done
+* "setup": function (next) {}
+* "new client": function (client, next) {}
+* "report": function (failures, next) {next(err, ['report/file/path'])}
+* "done": function (next) {}

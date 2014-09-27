@@ -34,6 +34,37 @@ module.exports = {
         });
     },
 
+    assertIsVisible: function (selector, message, cb) {
+        if (!cb) {
+            cb = message;
+            message = "assertIsVisible";
+        }
+        this.isVisible(selector, function (err, isVisible) {
+            try {
+                if (err) {throw err;}
+                expect(isVisible).to.be.true;
+                cb();
+            } catch (e) {
+                cb(new VError(e, message));
+            }
+        });
+    },
+    assertIsHidden: function (selector, message, cb) {
+        if (!cb) {
+            cb = message;
+            message = "assertIsHidden";
+        }
+        this.isVisible(selector, function (err, isVisible) {
+            try {
+                if (err) {throw err;}
+                expect(isVisible).to.be.false;
+                cb();
+            } catch (e) {
+                cb(new VError(e, message));
+            }
+        });
+    },
+
      assertText: function assertText(selector, expectedText, message, cb) {
         if (!cb) {
             cb = message;

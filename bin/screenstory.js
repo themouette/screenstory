@@ -1,20 +1,48 @@
 #!/usr/bin/env node
 /* globals process, require */
 'use strict';
-var Mocha = require('mocha'),
-    program = require('commander'),
-    fs = require('fs'),
-    glob = require('glob'),
-    path = require('path'),
-    webdriverjs = require('webdriverio'),
-    screenstory = require('../lib/screenstory'),
-    VError = require('verror');
+var debug           = require('debug')('screenstory:bin');
+var Mocha           = require('mocha');
+var program         = require('commander');
+var fs              = require('fs');
+var glob            = require('glob');
+var path            = require('path');
+var webdriverjs     = require('webdriverio');
+var screenstory     = require('../lib/screenstory');
+var VError          = require('verror');
+var yaml            = require('js-yaml');
+var findup          = require('findup-sync');
+var _               = require('lodash');
 
+
+function loadConfigFile(filePath) {
+    if (!filePath) {
+        return {};
+    }
+    var config;
+
+    try {
+        config = yaml.safeLoad(fs.readFileSync(filePath, 'utf8'));
+        return config;
+    } catch (e) {
+        throw new VError(e, 'While parsing config file "%s".', filePath);
+    }
+}
+var defaultConfig = _.extend(
+    loadConfigFile(findup('screenstory.yml')),
+    loadConfigFile(findup('screenstory.yml', {cwd: __dirname}))
+);
+
+debug("Loaded default config");
 
 function parseCapabilities(capabilities) {
     try {
         return JSON.parse(capabilities);
     } catch (e) {
+        if (defaultConfig.capabilities[capabilities]) {
+            return defaultConfig.capabilities[capabilities];
+        }
+
         return { browserName: capabilities };
     }
 }
@@ -38,7 +66,10 @@ program
 
     .option('-p, --project-name <No Project>', 'Add a project name to story Ids', 'No Project')
     .option('-u, --url [http://localhost:1337]', 'Specify test url [http://localhost:1337]', 'http://localhost:1337')
+
     .option('-s, --screenshot-root [tests/screenshots]', 'Specify screenshot destination [tests/screenshots]', 'tests/screenshots')
+    .option('--screenshot-width [1024]', 'Specify screen width (px)', collect, [])
+    .option('--screenshot-orientation [PORTRAIT|LANDSCAPE]', 'Specify window resolution (px)', collect, [])
 
     // selenium related options
     .option('-c, --wd-capabilities <phantomjs>', 'Specify desired capabilities (accept JSON or browserName)', parseCapabilities, parseCapabilities('phantomjs'))
@@ -59,6 +90,8 @@ program
     .option('--reporter <spec>', 'Mocha reporter [spec, xunit, dot, json, markdown...]', 'spec')
     .option('--global <module>', 'Require <module> and add it to global path', collect, [])
     .option('--extension <module>', 'Require <module> a client extension', collect, [])
+
+    .option('--admin-panel <http://localhost:9000>', 'Send reports to a webdrivercss-adminpanel server', '')
 
     .on('--help', function () {
         console.log('  Examples:');
