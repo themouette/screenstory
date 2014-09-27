@@ -36,6 +36,7 @@ program
     .version('0.0.1')
     .usage('[options] <files ...>')
 
+    .option('-p, --project-name <No Project>', 'Add a project name to story Ids', 'No Project')
     .option('-u, --url [http://localhost:1337]', 'Specify test url [http://localhost:1337]', 'http://localhost:1337')
     .option('-s, --screenshot-root [tests/screenshots]', 'Specify screenshot destination [tests/screenshots]', 'tests/screenshots')
 
