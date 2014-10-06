@@ -72,7 +72,7 @@ program
     .option('--screenshot-orientation [PORTRAIT|LANDSCAPE]', 'Specify window resolution (px)', collect, [])
 
     // selenium related options
-    .option('-c, --wd-capabilities <phantomjs>', 'Specify desired capabilities (accept JSON or browserName)', parseCapabilities, parseCapabilities('phantomjs'))
+    .option('-c, --wd-capabilities <phantomjs>', 'Specify desired capabilities (browserName or id as defined in screenstory.yml)', parseCapabilities, parseCapabilities('phantomjs'))
     .option('--wd-host [127.0.0.1]', 'Specify selenium grid host', '127.0.0.1')
     .option('--wd-port [4444]', 'Specify selenium grid host', '4444')
     .option('--wd-username []', 'Specify selenium grid host')
