@@ -93,3 +93,9 @@ module.exports = function (runner, options) {
 * "new client": function (client, next) {}
 * "report": function (failures, next) {next(err, ['report/file/path'])}
 * "done": function (next) {}
+
+## License
+
+This project is released under the MIT Licence.
+
+See LICENSE file for more information
