@@ -1,3 +1,9 @@
+v0.5.1
+------
+
+* Fix screen resolution in saucelabs
+* default capabilities are windows, to leverage screen width
+
 v0.5.0
 ------
 
