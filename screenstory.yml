@@ -36,11 +36,12 @@ capabilities:
         browserName:    phantomjs
         version:        null
         platform:       ANY
+        "phantomjs.cli.args": ['--ignore-ssl-errors=yes']
 
     chrome:
         browserName:    chrome
         version:        null
-        platform:       ANY
+        platform:       "Windows 7"
     chrome-xp:
         browserName:    chrome
         version:        null
@@ -65,7 +66,7 @@ capabilities:
     firefox:
         browserName:    firefox
         version:        null
-        platform:       ANY
+        platform:       "Windows 7"
     firefox-xp:
         browserName:    firefox
         version:        null
