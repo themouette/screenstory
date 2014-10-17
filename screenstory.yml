@@ -28,206 +28,235 @@ project:
 # at https://code.google.com/p/selenium/wiki/DesiredCapabilities
 #
 # When a `--wd-capabilities` option is a string, cli will first
-# attempt to load capabilities withby id from this list.
+# attempt to load capabilities by id from this list.
 # This option is not available as a cli option.
 capabilities:
-    # desktop browsers
-    phantomjs:
-        browserName:    phantomjs
-        version:        null
-        platform:       ANY
-        "phantomjs.cli.args": ['--ignore-ssl-errors=yes']
+    # Default selenium implmentation only provides following
+    # {WINDOWS|XP|VISTA|MAC|LINUX|UNIX|ANDROID}
+    #
+    # source: https://code.google.com/p/selenium/wiki/DesiredCapabilities
+    all:
+        # desktop browsers
+        phantomjs:
+            browserName:    phantomjs
+            #version:        null
+            #platform:       ANY
+            "phantomjs.cli.args": ['--ignore-ssl-errors=true', '--ssl-protocol=any', '--ignore-ssl-errors=true']
 
-    chrome:
-        browserName:    chrome
-        version:        null
-        platform:       "Windows 7"
-    chrome-xp:
-        browserName:    chrome
-        version:        null
-        platform:       XP
-    chrome-vista:
-        browserName:    chrome
-        version:        null
-        platform:       VISTA
-    chrome-windows:
-        browserName:    chrome
-        version:        null
-        platform:       WINDOWS
-    chrome-linux:
-        browserName:    chrome
-        version:        null
-        platform:       LINUX
-    chrome-mac:
-        browserName:    chrome
-        version:        null
-        platform:       MAC
+        chrome:
+            browserName:    chrome
+            version:        null
+            platform:       ANY
+        chrome-xp:
+            browserName:    chrome
+            version:        null
+            platform:       XP
+        chrome-vista:
+            browserName:    chrome
+            version:        null
+            platform:       VISTA
+        chrome-windows:
+            browserName:    chrome
+            version:        null
+            platform:       WINDOWS
+        chrome-linux:
+            browserName:    chrome
+            version:        null
+            platform:       LINUX
+        chrome-mac:
+            browserName:    chrome
+            version:        null
+            platform:       MAC
 
-    firefox:
-        browserName:    firefox
-        version:        null
-        platform:       "Windows 7"
-    firefox-xp:
-        browserName:    firefox
-        version:        null
-        platform:       XP
-    firefox-vista:
-        browserName:    firefox
-        version:        null
-        platform:       VISTA
-    firefox-windows:
-        browserName:    firefox
-        version:        null
-        platform:       WINDOWS
-    firefox-linux:
-        browserName:    firefox
-        version:        null
-        platform:       LINUX
-    firefox-mac:
-        browserName:    firefox
-        version:        null
-        platform:       MAC
+        firefox:
+            browserName:    firefox
+            version:        null
+            platform:       ANY
+        firefox-xp:
+            browserName:    firefox
+            version:        null
+            platform:       XP
+        firefox-vista:
+            browserName:    firefox
+            version:        null
+            platform:       VISTA
+        firefox-windows:
+            browserName:    firefox
+            version:        null
+            platform:       WINDOWS
+        firefox-linux:
+            browserName:    firefox
+            version:        null
+            platform:       LINUX
+        firefox-mac:
+            browserName:    firefox
+            version:        null
+            platform:       MAC
 
-    ie11:
-        browserName:    internet explorer
-        version:        11
-        platform:       "Windows 8.1"
-    ie11-windows-81:
-        browserName:    internet explorer
-        version:        11
-        platform:       "Windows 8.1"
-    ie11-windows-7:
-        browserName:    internet explorer
-        version:        11
-        platform:       "Windows 7"
+        ie11:
+            browserName:    internet explorer
+            version:        11
+            platform:       "WIN8"
+        ie11-windows-81:
+            browserName:    internet explorer
+            version:        11
+            platform:       "WIN8"
+        ie11-windows-7:
+            browserName:    internet explorer
+            version:        11
+            platform:       "WINDOWS"
 
-    ie10:
-        browserName:    internet explorer
-        version:        10
-        platform:       "Windows 8"
-    ie10-windows-8:
-        browserName:    internet explorer
-        version:        10
-        platform:       "Windows 8"
-    ie10-windows-7:
-        browserName:    internet explorer
-        version:        10
-        platform:       "Windows 7"
+        ie10:
+            browserName:    internet explorer
+            version:        10
+            platform:       "WIN8"
+        ie10-windows-8:
+            browserName:    internet explorer
+            version:        10
+            platform:       "WIN8"
+        ie10-windows-7:
+            browserName:    internet explorer
+            version:        10
+            platform:       "WINDOWS"
 
-    ie9:
-        browserName:    internet explorer
-        version:        9
-        platform:       "Windows 7"
-    ie9-windows-7:
-        browserName:    internet explorer
-        version:        9
-        platform:       "Windows 7"
+        ie9:
+            browserName:    internet explorer
+            version:        9
+            platform:       "WINDOWS"
+        ie9-windows-7:
+            browserName:    internet explorer
+            version:        9
+            platform:       "WINDOWS"
 
-    ie8:
-        browserName:    internet explorer
-        version:        8
-        platform:       "Windows 7"
-    ie8-windows-7:
-        browserName:    internet explorer
-        version:        8
-        platform:       "Windows 7"
-    ie8-windows-xp:
-        browserName:    internet explorer
-        version:        8
-        platform:       "Windows XP"
+        ie8:
+            browserName:    internet explorer
+            version:        8
+            platform:       "WINDOWS"
+        ie8-windows-7:
+            browserName:    internet explorer
+            version:        8
+            platform:       "WINDOWS"
+        ie8-windows-xp:
+            browserName:    internet explorer
+            version:        8
+            platform:       "XP"
 
-    ie7:
-        browserName:    internet explorer
-        version:        7
-        platform:       "Windows XP"
-    ie7-windows-xp:
-        browserName:    internet explorer
-        version:        7
-        platform:       "Windows XP"
+        ie7:
+            browserName:    internet explorer
+            version:        7
+            platform:       "XP"
+        ie7-windows-xp:
+            browserName:    internet explorer
+            version:        7
+            platform:       "XP"
 
-    ie6:
-        browserName:    internet explorer
-        version:        6
-        platform:       "Windows XP"
-    ie6-windows-xp:
-        browserName:    internet explorer
-        version:        6
-        platform:       "Windows XP"
+        ie6:
+            browserName:    internet explorer
+            version:        6
+            platform:       "XP"
+        ie6-windows-xp:
+            browserName:    internet explorer
+            version:        6
+            platform:       "XP"
 
-    # mobile browsers
-    chrome-android:
-        browserName:    chrome
-        version:        null
-        platform:       ANDROID
+        # mobile browsers
+        chrome-android:
+            browserName:    chrome
+            version:        null
+            platform:       ANDROID
 
-#    ie11:
-#        browserName:    internet explorer
-#        version:        11
-#        platform:       "WIN8"
-#    ie11-windows-81:
-#        browserName:    internet explorer
-#        version:        11
-#        platform:       "WIN8"
-#    ie11-windows-7:
-#        browserName:    internet explorer
-#        version:        11
-#        platform:       "WINDOWS"
-#
-#    ie10:
-#        browserName:    internet explorer
-#        version:        10
-#        platform:       "WIN8"
-#    ie10-windows-8:
-#        browserName:    internet explorer
-#        version:        10
-#        platform:       "WIN8"
-#    ie10-windows-7:
-#        browserName:    internet explorer
-#        version:        10
-#        platform:       "WINDOWS"
-#
-#    ie9:
-#        browserName:    internet explorer
-#        version:        9
-#        platform:       "WINDOWS"
-#    ie9-windows-7:
-#        browserName:    internet explorer
-#        version:        9
-#        platform:       "WINDOWS"
-#
-#    ie8:
-#        browserName:    internet explorer
-#        version:        8
-#        platform:       "WINDOWS"
-#    ie8-windows-7:
-#        browserName:    internet explorer
-#        version:        8
-#        platform:       "WINDOWS"
-#    ie8-windows-xp:
-#        browserName:    internet explorer
-#        version:        8
-#        platform:       "XP"
-#
-#    ie7:
-#        browserName:    internet explorer
-#        version:        7
-#        platform:       "XP"
-#    ie7-windows-xp:
-#        browserName:    internet explorer
-#        version:        7
-#        platform:       "XP"
-#
-#    ie6:
-#        browserName:    internet explorer
-#        version:        6
-#        platform:       "XP"
-#    ie6-windows-xp:
-#        browserName:    internet explorer
-#        version:        6
-#        platform:       "XP"
+    # Saucelabs has a richer variety of platform, it is possible to specify a
+    # lot more than a basic selenium implementation accepts.
+    #
+    # Full list of extra capabilities is available at https://docs.saucelabs.com/reference/test-configuration/#sauce-specific-settings
+    #
+    # Full list of available capabilities is available at https://saucelabs.com/platforms
+    saucelabs:
+        chrome:
+            browserName:    chrome
+            version:        null
+            platform:       "Windows 7"
+        chrome-windows:
+            browserName:    chrome
+            version:        null
+            platform:       "Windows 7"
+        firefox:
+            browserName:    firefox
+            version:        null
+            platform:       "Windows 7"
+        firefox-windows:
+            browserName:    firefox
+            version:        null
+            platform:       "Windows 7"
 
-    # mobile browsers
-    chrome-android:
-        browserName:    chrome
-        version:        null
-        platform:       ANDROID
+        ie11:
+            browserName:    internet explorer
+            version:        11
+            platform:       "Windows 8.1"
+        ie11-windows-81:
+            browserName:    internet explorer
+            version:        11
+            platform:       "Windows 8.1"
+        ie11-windows-7:
+            browserName:    internet explorer
+            version:        11
+            platform:       "Windows 7"
+
+        ie10:
+            browserName:    internet explorer
+            version:        10
+            platform:       "Windows 8"
+        ie10-windows-8:
+            browserName:    internet explorer
+            version:        10
+            platform:       "Windows 8"
+        ie10-windows-7:
+            browserName:    internet explorer
+            version:        10
+            platform:       "Windows 7"
+
+        ie9:
+            browserName:    internet explorer
+            version:        9
+            platform:       "Windows 7"
+        ie9-windows-7:
+            browserName:    internet explorer
+            version:        9
+            platform:       "Windows 7"
+
+        ie8:
+            browserName:    internet explorer
+            version:        8
+            platform:       "Windows 7"
+        ie8-windows-7:
+            browserName:    internet explorer
+            version:        8
+            platform:       "Windows 7"
+        ie8-windows-xp:
+            browserName:    internet explorer
+            version:        8
+            platform:       "Windows XP"
+
+        ie7:
+            browserName:    internet explorer
+            version:        7
+            platform:       "Windows XP"
+        ie7-windows-xp:
+            browserName:    internet explorer
+            version:        7
+            platform:       "Windows XP"
+
+        ie6:
+            browserName:    internet explorer
+            version:        6
+            platform:       "Windows XP"
+        ie6-windows-xp:
+            browserName:    internet explorer
+            version:        6
+            platform:       "Windows XP"
+
+
+
+    # Browserstack too has its own way to manage capabilities
+    # it is more standard though, so this section is empty for now.
+    browserstack:
