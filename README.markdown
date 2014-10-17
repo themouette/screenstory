@@ -89,6 +89,7 @@ module.exports = function (runner, options) {
 
 ## Runner events
 
+* "configure": function (fileOptions, runnerOptions) {}
 * "setup": function (next) {}
 * "new client": function (client, next) {}
 * "report": function (failures, next) {next(err, ['report/file/path'])}
