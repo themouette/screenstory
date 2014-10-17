@@ -10,42 +10,11 @@ var path            = require('path');
 var webdriverjs     = require('webdriverio');
 var screenstory     = require('../lib/screenstory');
 var VError          = require('verror');
-var yaml            = require('js-yaml');
-var findup          = require('findup-sync');
-var _               = require('lodash');
 
 
-function loadConfigFile(filePath) {
-    if (!filePath) {
-        return {};
-    }
-    var config;
-
-    try {
-        config = yaml.safeLoad(fs.readFileSync(filePath, 'utf8'));
-        return config;
-    } catch (e) {
-        throw new VError(e, 'While parsing config file "%s".', filePath);
-    }
-}
-var defaultConfig = _.extend(
-    loadConfigFile(findup('screenstory.yml')),
-    loadConfigFile(findup('screenstory.yml', {cwd: __dirname}))
-);
 
 debug("Loaded default config");
 
-function parseCapabilities(capabilities) {
-    try {
-        return JSON.parse(capabilities);
-    } catch (e) {
-        if (defaultConfig.capabilities[capabilities]) {
-            return defaultConfig.capabilities[capabilities];
-        }
-
-        return { browserName: capabilities };
-    }
-}
 function parseResolution(resolution) {
     var res = resolution.split('x') || [];
 
@@ -72,7 +41,7 @@ program
     .option('--screenshot-orientation [PORTRAIT|LANDSCAPE]', 'Specify window resolution (px)', collect, [])
 
     // selenium related options
-    .option('-c, --wd-capabilities <phantomjs>', 'Specify desired capabilities (browserName or id as defined in screenstory.yml)', parseCapabilities, parseCapabilities('phantomjs'))
+    .option('-c, --wd-capabilities <phantomjs>', 'Specify desired capabilities (browserName or id as defined in screenstory.yml)', 'phantomjs')
     .option('--wd-host [127.0.0.1]', 'Specify selenium grid host', '127.0.0.1')
     .option('--wd-port [4444]', 'Specify selenium grid host', '4444')
     .option('--wd-username []', 'Specify selenium grid host')
