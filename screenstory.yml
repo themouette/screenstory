@@ -41,6 +41,9 @@ capabilities:
             browserName:    phantomjs
             #version:        null
             #platform:       ANY
+            # This is a hack to accept any ssl certificate.
+            # It is needed even with valid certificates.
+            # see https://github.com/detro/ghostdriver/pull/388
             "phantomjs.cli.args": ['--ignore-ssl-errors=true', '--ssl-protocol=any', '--ignore-ssl-errors=true']
 
         chrome:
