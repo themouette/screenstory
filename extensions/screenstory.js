@@ -96,11 +96,21 @@ module.exports = function (runner, options) {
                 // For now there is no way to ask for diff computation
                 // only screenshot is available.
                 if (!this.computeDiff) {
-                    this
-                        .saveDocumentScreenshot(image.fileDocument, function (err) {
-                            if (err) { return done(err); }
-                            screenstory.saveWebdrivercssResponse(image, null, done);
-                        });
+                    switch (this.desiredCapabilities.browserName) {
+                        case 'phantomjs':
+                            this
+                                .saveScreenshot(image.fileDocument, function (err) {
+                                    if (err) { return done(err); }
+                                    screenstory.saveWebdrivercssResponse(image, null, done);
+                                });
+                            break;
+                        default:
+                            this
+                                .saveDocumentScreenshot(image.fileDocument, function (err) {
+                                    if (err) { return done(err); }
+                                    screenstory.saveWebdrivercssResponse(image, null, done);
+                                });
+                    }
                 } else {
                     this
                         .webdrivercss(image.id, screenshotConfig, function addToScreenstory(err, response) {
