@@ -5,7 +5,9 @@
   "main": "index.js",
   "repository": "https://github.com/themouette/screenstory.git",
   "scripts": {
-    "test": "DEBUG=screenstory:* ./bin/screenstory.js --timeout 20000 samples/github.js --global assert --extension samples/extensions/foo.js --extension samples/extensions/function.js --project-name screenstory --wd-resolution 1024x768"
+    "test": "npm run test-unit && npm run test-sample",
+    "test-sample": "DEBUG=screenstory:* ./bin/screenstory.js --timeout 20000 samples/github.js --global assert --extension samples/extensions/foo.js --extension samples/extensions/function.js --project-name screenstory --wd-resolution 1024x768",
+    "test-unit": "mocha tests/unit/**/*.js"
   },
   "author": "themouette",
   "license": "MIT",

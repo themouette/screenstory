@@ -1,4 +1,4 @@
-/* globals describe:true, before:true, it:true, after:true, afterEach:true, brforeEach:true */
+/* globals describe:true, before:true, it:true, after:true, afterEach:true, beforeEach:true */
 /* globals newClient */
 /* globals assert */
 describe('Github test',function(done) {
@@ -19,8 +19,11 @@ describe('Github test',function(done) {
     it('should include assert as global', function(done) {
         client
             .getTitle(function(err, title) {
+                if(typeof assert === 'undefined') {
+                    throw new Error('assert should be inserted');
+                }
                 assert.ifError(err, 'Should not have error');
-                assert(title === 'GitHub · Build software better, together.');
+                assert(title === 'GitHub · Build software better, together.', 'title should be as expected');
             })
             .call(done);
     });
