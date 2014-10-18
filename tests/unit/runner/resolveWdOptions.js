@@ -90,6 +90,9 @@ describe('resolveWdOptions()', function() {
                 }
             };
 
+            process.env.SAUCE_USERNAME        = process.env.SAUCE_USERNAME || '';
+            process.env.BROWSERSTACK_USERNAME = process.env.BROWSERSTACK_USERNAME || '';
+
         });
         it('should configure from screenstory.yml file', function() {
             var result = resolveWdOptions(screenstoryOptions, {wdCapabilities: 'any'});
