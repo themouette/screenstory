@@ -30,7 +30,7 @@ function collect(val, memo) {
 }
 
 program
-    .version('0.0.1')
+    .version(require('package.json').version)
     .usage('[options] <files ...>')
 
     .option('-p, --project-name <No Project>', 'Add a project name to story Ids', 'No Project')
