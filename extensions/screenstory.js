@@ -19,7 +19,7 @@ module.exports = function (runner, options) {
     var screenstory = require('../lib/screenstory')(screenshotRoot);
     debug('Create screenstory object...');
 
-    runner.on('report',function (failures, next) {
+    runner.on('report', function (failures, next) {
         debug('+  generate report');
         screenstory.generateReport(function (err, reports) {
             debug('+  generated reports', reports);
@@ -29,6 +29,7 @@ module.exports = function (runner, options) {
 
     runner.on('new client', function (client, next) {
         // noting to do, webdriver is autoloaded by screenstory
+        next();
     });
     function initWebdrivercss(client, storyTitle, cb) {
         var storyRoot = screenstory.storyRoot(client.desiredCapabilities, storyTitle);

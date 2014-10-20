@@ -23,5 +23,6 @@ module.exports = function(runner, options) {
         assert(called.newClient, 'should have called "new client" event');
         assert(called.report, 'should have called "report" event');
         console.log('did call all events');
+        next();
     });
 };
