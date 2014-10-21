@@ -4,6 +4,8 @@ project:
     # Add a global variable `url` available in every test file.
     url:                null
     resolution:         null
+    extension:
+        - screenstory
     # Where to store screenshots
     screenshot:
         root:           tests/screenshots
