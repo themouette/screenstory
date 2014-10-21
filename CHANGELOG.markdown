@@ -1,3 +1,13 @@
+v0.6.0
+------
+
+* Use screenstory.yml for options
+* Change `--wd-resolution` to `--resolution`
+* Migrate from Promises to Async
+* Add some tests
+* Phantomjs does not relies on webdrivercss anymore
+* Cli version is in sync with package.json
+
 v0.5.1
 ------
 
