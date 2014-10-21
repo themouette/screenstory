@@ -3,6 +3,7 @@ project:
     name:               "Screenstory"
     # Add a global variable `url` available in every test file.
     url:                null
+    resolution:         null
     # Where to store screenshots
     screenshot:
         root:           tests/screenshots
@@ -21,7 +22,6 @@ project:
         username:       null
         key:            null
         log-level:      null
-        resolution:     null
 
 # List all capabilities for every browsers
 # More information on available selenui webdriver capabilities
@@ -44,7 +44,7 @@ capabilities:
             # This is a hack to accept any ssl certificate.
             # It is needed even with valid certificates.
             # see https://github.com/detro/ghostdriver/pull/388
-            "phantomjs.cli.args": ['--ignore-ssl-errors=true', '--ssl-protocol=any', '--ignore-ssl-errors=true']
+            "phantomjs.cli.args": ['--ignore-ssl-errors=true', '--ssl-protocol=any', '--ignore-ssl-errors=true' ]
 
         chrome:
             browserName:    chrome

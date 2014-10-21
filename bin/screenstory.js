@@ -15,16 +15,10 @@ var VError          = require('verror');
 
 debug("Loaded default config");
 
-function parseResolution(resolution) {
-    var res = resolution.split('x') || [];
-
-    return {
-        width: res[0] ? parseInt(res[0]) : null,
-        height: res[1] ? parseInt(res[1]) : null
-    };
-}
-
 function collect(val, memo) {
+  if (!memo) {
+      memo = [];
+  }
   memo.push(val);
   return memo;
 }
@@ -33,12 +27,13 @@ program
     .version(require('package.json').version)
     .usage('[options] <files ...>')
 
-    .option('-p, --project-name <No Project>', 'Add a project name to story Ids', 'No Project')
-    .option('-u, --url [http://localhost:1337]', 'Specify test url [http://localhost:1337]', 'http://localhost:1337')
+    .option('-p, --project-name <No Project>', 'Add a project name to story Ids')
+    .option('-u, --url [http://localhost:1337]', 'Specify test url [http://localhost:1337]')
+    .option('-r, --resolution [1024x768]', 'Specify window resolution (px)')
 
-    .option('-s, --screenshot-root [tests/screenshots]', 'Specify screenshot destination [tests/screenshots]', 'tests/screenshots')
-    .option('--screenshot-width [1024]', 'Specify screen width (px)', collect, [])
-    .option('--screenshot-orientation [PORTRAIT|LANDSCAPE]', 'Specify window resolution (px)', collect, [])
+    .option('-s, --screenshot-root [tests/screenshots]', 'Specify screenshot destination [tests/screenshots]')
+    .option('--screenshot-width [1024]', 'Specify screen width (px)', collect)
+    .option('--screenshot-orientation [PORTRAIT|LANDSCAPE]', 'Specify window resolution (px)', collect)
 
     // selenium related options
     .option('-c, --wd-capabilities <phantomjs>', 'Specify desired capabilities (browserName or id as defined in screenstory.yml)', 'phantomjs')
@@ -47,8 +42,6 @@ program
     .option('--wd-username []', 'Specify selenium grid host')
     .option('--wd-key []', 'Specify selenium grid host')
     .option('--wd-log-level [silent]', 'Specify webdriverjs logLevel (verbose | silent | command | data | result)', 'silent')
-
-    .option('-r, --wd-resolution [1024x768]', 'Specify window resolution (px)', parseResolution)
 
     .option('--browserstack', 'Use browserstack')
     .option('--saucelabs', 'Use saucelabs')

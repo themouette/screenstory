@@ -11,10 +11,12 @@ describe('resolveScreenshotOptions()', function() {
     beforeEach(function() {
         // define some fixtures
         screenstoryOptions  = {
-            screenshot: {
-                root: 'file-root',
-                width: 'file-width',
-                orientation: 'file-orientation'
+            env: {
+                screenshot: {
+                    root: 'file-root',
+                    width: 'file-width',
+                    orientation: 'file-orientation'
+                }
             }
         };
 

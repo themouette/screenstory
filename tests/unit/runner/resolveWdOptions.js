@@ -17,7 +17,8 @@ describe('resolveWdOptions()', function() {
                     'all':          {simple: 'all', 'all-only': true},
                     'saucelabs':    {simple: 'saucelabs', 'saucelabs-only': true},
                     'browserstack': {simple: 'browserstack', 'browserstack-only': true}
-                }
+                },
+                env: {}
             };
 
         });
@@ -83,10 +84,12 @@ describe('resolveWdOptions()', function() {
         before(function() {
             // define some fixtures
             screenstoryOptions  = {
-                wd: {
-                    host: 'foo',
-                    port: 80,
-                    username: 'john doe'
+                env: {
+                    wd: {
+                        host: 'foo',
+                        port: 80,
+                        username: 'john doe'
+                    }
                 }
             };
 
