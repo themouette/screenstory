@@ -24,7 +24,7 @@ function collect(val, memo) {
 }
 
 program
-    .version(require('package.json').version)
+    .version(require('../package.json').version)
     .usage('[options] <files ...>')
 
     .option('-p, --project-name <No Project>', 'Add a project name to story Ids')
