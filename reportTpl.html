@@ -51,10 +51,10 @@
                     <ul class="clearing-thumbs small-block-grid-2 large-block-grid-4" data-clearing>
                     <% _.each(stories.screenshots, function (item) { %>
                         <li>
-                        <a href="<%= item.urlDocument %>" class="th<% if (item.isNew) {
+                        <a href="<%= imageUrl(item) %>" class="th<% if (item.isNew) {
                             print(' is-new') } %><% if (item.isModified) {
                             print(' is-modified') } %>">
-                               <img data-caption="<%- item.title %>" alt="<%- item.title %>" title="<%- item.title %>", src="<%- item.url %>" />
+                               <img data-caption="<%- item.title %>" alt="<%- item.title %>" title="<%- item.title %>", src="<%- imageUrl(item) %>" />
                                <p class="text-center"><small><%= item.title %></small></p>
                            </a>
                         </li>
@@ -67,8 +67,8 @@
                 <% _.each(data, function (stories) { %>
                     <% _.each(stories.screenshots, function (item) { %>
                         <li>
-                           <a href="<%= item.urlDocument %>" class="th">
-                               <img data-caption="<%= item.id %>" alt="<%= item.id %>" title="<%= item.id %>", src="<%= item.url %>" />
+                           <a href="<%= imageUrl(item) %>" class="th">
+                               <img data-caption="<%= item.id %>" alt="<%= item.id %>" title="<%= item.id %>", src="<%= imageUrl(item) %>" />
                                <p class="text-center"><small><%= item.title %></small></p>
                            </a>
                         </li>

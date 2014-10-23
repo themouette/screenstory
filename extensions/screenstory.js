@@ -21,7 +21,7 @@ module.exports = function (runner, options) {
 
     runner.on('report', function (failures, next) {
         debug('+  generate report');
-        screenstory.generateReport(function (err, reports) {
+        screenstory.generateReport(options, function (err, reports) {
             debug('+  generated reports', reports);
             next(err, reports);
         });
@@ -102,13 +102,15 @@ module.exports = function (runner, options) {
                 var image = screenstory.loadWebdrivercss({
                         capabilities: this.desiredCapabilities,
                         title: title,
-                        story: this._currentStory
+                        story: this._currentStory,
+                        diff: options.screenshotDiff,
+                        width: screenshotConfig.screenWidth
                     });
 
                 // FIXME
                 // For now there is no way to ask for diff computation
                 // only screenshot is available.
-                if (!this.computeDiff) {
+                if (!options.screenshotDiff) {
 
                     this
                         .execute(function saveScroll() {
