@@ -5,6 +5,7 @@ project:
     url:                null
     resolution:         null
     extension:          []
+    mochaColors:        true
     # Where to store screenshots
     screenshot:
         root:           tests/screenshots

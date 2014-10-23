@@ -1,3 +1,8 @@
+v0.6.2
+------
+
+* Add `--mocha-colors` and `--mocha-no-colors` flags
+
 v0.6.1
 ------
 

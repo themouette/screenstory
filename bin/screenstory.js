@@ -50,6 +50,8 @@ program
     .option('--to-file <filepath>', 'Write tests results to file [null]', null)
     .option('-t, --timeout <10000>', 'Set timeout', parseInt, 10000)
     .option('--reporter <spec>', 'Mocha reporter [spec, xunit, dot, json, markdown...]', 'spec')
+    .option('--mocha-colors', 'disable colors in mocha reporter')
+    .option('--mocha-no-colors', 'disable colors in mocha reporter')
     .option('--global <module>', 'Require <module> and add it to global path', collect, [])
     .option('--extension <module>', 'Require <module> a client extension', collect, [])
 
