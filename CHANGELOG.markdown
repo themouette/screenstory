@@ -1,3 +1,9 @@
+v0.6.3
+------
+
+* Rename flag to `--no-mocha-colors`
+* Add `--screenshot-diff` flag
+
 v0.6.2
 ------
 
