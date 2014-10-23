@@ -1,3 +1,9 @@
+v0.6.1
+------
+
+* Restore scroll after screenshot
+* Fix error when story is not set
+
 v0.6.0
 ------
 
