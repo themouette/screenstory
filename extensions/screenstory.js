@@ -62,6 +62,18 @@ module.exports = function (runner, options) {
 
     return {
         'screenstory': function (title, screenshotConfig, done) {
+
+            var currentScroll;
+            var self = this;
+
+            function restoreScroll(cb) {
+                return function () {
+                    self
+                        .scroll(currentScroll.x, currentScroll.y)
+                        .call(cb);
+                    };
+            }
+
             try {
                 // config is optional
                 if (!done) {
@@ -97,19 +109,32 @@ module.exports = function (runner, options) {
                 // For now there is no way to ask for diff computation
                 // only screenshot is available.
                 if (!this.computeDiff) {
+
+                    this
+                        .execute(function saveScroll() {
+                            var body = document.body,
+                                html = document.documentElement;
+
+                            return {
+                                x:  Math.max( body.scrollWidth, body.offsetWidth, html.clientWidth, html.scrollWidth, html.offsetWidth ),
+                                y:  Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight )
+                            };
+                        }, [], function(err,res) {
+                            currentScroll = res;
+                        });
                     switch (this.desiredCapabilities.browserName) {
                         case 'phantomjs':
                             this
                                 .saveScreenshot(image.fileDocument, function (err) {
                                     if (err) { return done(err); }
-                                    screenstory.saveWebdrivercssResponse(image, null, done);
+                                    screenstory.saveWebdrivercssResponse(image, null, restoreScroll(done));
                                 });
                             break;
                         default:
                             this
                                 .saveDocumentScreenshot(image.fileDocument, function (err) {
                                     if (err) { return done(err); }
-                                    screenstory.saveWebdrivercssResponse(image, null, done);
+                                    screenstory.saveWebdrivercssResponse(image, null, restoreScroll(done));
                                 });
                     }
                 } else {
@@ -120,7 +145,7 @@ module.exports = function (runner, options) {
                         });
                 }
             } catch (err) {
-            debug(err);
+                debug(err);
                 done(new VError(err, 'While executing screenstory command'));
             }
         },
