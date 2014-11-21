@@ -4,6 +4,7 @@ project:
     # Add a global variable `url` available in every test file.
     url:                null
     resolution:         null
+    timeout:            10000
     extension:          []
     mochaColors:        true
     # Where to store screenshots
