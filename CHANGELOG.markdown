@@ -1,3 +1,8 @@
+v0.7.1
+------
+
+* fix timeout === null or undefined
+
 v0.7.0
 ------
 
