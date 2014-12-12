@@ -6,7 +6,7 @@
   "repository": "https://github.com/themouette/screenstory.git",
   "scripts": {
     "test": "npm run test-unit && npm run test-sample",
-    "test-sample": "DEBUG=screenstory:* ./bin/screenstory.js --timeout 20000 samples/github.js --global assert --extension samples/extensions/foo.js --extension samples/extensions/function.js --project-name screenstory --wd-resolution 1024x768",
+    "test-sample": "DEBUG=screenstory:* ./bin/screenstory.js --timeout 0 samples/github.js --global assert --extension samples/extensions/foo.js --extension samples/extensions/function.js --project-name screenstory --resolution 1024x768 --screenshot-diff --screenshot-width 320 --screenshot-width 800 --screenshot-width 1024  --screenshot-width 1600",
     "test-unit": "mocha tests/unit/**/*.js"
   },
   "author": "themouette",
@@ -26,7 +26,7 @@
     "morph": "^0.2.0",
     "sanitize-filename": "^1.1.1",
     "verror": "^1.4.0",
-    "webdrivercss": "^0.3.0",
+    "webdrivercss": "^1.0",
     "webdriverio": "^2.2.0"
   },
   "bin": {
