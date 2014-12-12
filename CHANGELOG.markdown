@@ -1,4 +1,10 @@
-v0.6.3
+v0.7.0
+------
+
+* Fix timeout=0
+* Update webdrivercss to ^1.0
+
+v0.6.4
 ------
 
 * Allow timeout to be configured in screenstory.yml
