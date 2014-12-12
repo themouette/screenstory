@@ -11,6 +11,11 @@ describe('Github test',function(done) {
             .setStory('Github')
             .call(done);
     });
+    after(function () {
+        client
+            .end()
+            .call(done);
+    });
     it('should call screenstory', function(done) {
         client
             .screenstory('main page')

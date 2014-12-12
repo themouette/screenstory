@@ -51,11 +51,13 @@
                     <ul class="clearing-thumbs small-block-grid-2 large-block-grid-4" data-clearing>
                     <% _.each(stories.screenshots, function (item) { %>
                         <li>
-                        <a href="<%= imageUrl(item) %>" class="th<% if (item.isNew) {
-                            print(' is-new') } %><% if (item.isModified) {
+                        <a href="<%= imageUrl(item) %>" class="th<% if (item.isNewImage) {
+                            print(' is-new') } %><% if (item.isWithinMisMatchTolerance === false) {
                             print(' is-modified') } %>">
                                <img data-caption="<%- item.title %>" alt="<%- item.title %>" title="<%- item.title %>", src="<%- imageUrl(item) %>" />
-                               <p class="text-center"><small><%= item.title %></small></p>
+                               <p class="text-center"><small><%= item.title %><% if (item.isNewImage) {
+                            print(' (New image)') } %><% if (item.isWithinMisMatchTolerance === false) {
+                            print(' ('+item.misMatchPercentage+'%)') } %></small></p>
                            </a>
                         </li>
                     <% }) %>

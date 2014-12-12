@@ -4,6 +4,7 @@ var VError          = require('verror');
 var Promise         = require('es6-promise').Promise;
 var webdrivercss    = require('webdrivercss');
 var path            = require('path');
+var async           = require('async');
 
 var DEFAULT_PROJECT_NAME = 'No Project';
 
@@ -15,6 +16,10 @@ module.exports = function (runner, options) {
     var screenshotOrientations = options.screenshotOrientation || null;
     var projectName = options.projectName || DEFAULT_PROJECT_NAME;
     var adminPanel = options.adminPanel ? options.adminPanel + '/api/repositories/' : null;
+
+    if (screenshotWidth && !Array.isArray(screenshotWidth)) {
+        screenshotWidth = [screenshotWidth];
+    }
 
     var screenstory = require('../lib/screenstory')(screenshotRoot);
     debug('Create screenstory object...');
@@ -33,23 +38,24 @@ module.exports = function (runner, options) {
     });
     function initWebdrivercss(client, storyTitle, cb) {
         var storyRoot = screenstory.storyRoot(client.desiredCapabilities, storyTitle);
-        webdrivercss.init(client, {
-            screenshotRoot: storyRoot,
-            api: adminPanel
-        });
-        debug('setup webdrivercss "%s"', storyTitle);
-        if (adminPanel) {
-            client.sync();
-        }
-
-        // register only once
-        if (!client._currentStory) {
-            client.eventHandler.on('end', function () {
-                tearDownWebdrivercss(client);
-            });
-        }
-
         fse.mkdirs(path.join(storyRoot, 'diff'), function create(err) {
+            webdrivercss.init(client, {
+                screenshotRoot: storyRoot,
+                api: adminPanel,
+                screenWidth: screenshotWidth.slice(0) // clone the array
+            });
+            debug('setup webdrivercss "%s"', storyTitle);
+            if (adminPanel) {
+                client.sync();
+            }
+
+            // register only once
+            if (!client._currentStory) {
+                client.eventHandler.on('end', function () {
+                    tearDownWebdrivercss(client);
+                });
+            }
+
             cb(err);
         });
     }
@@ -70,6 +76,7 @@ module.exports = function (runner, options) {
                 return function () {
                     self
                         .scroll(currentScroll.x, currentScroll.y)
+                        .setViewportSize({ height: currentScroll.height, width: currentScroll.width })
                         .call(cb);
                     };
             }
@@ -94,8 +101,13 @@ module.exports = function (runner, options) {
                 } else {
                     // On a desktop
                     if (!screenshotConfig.screenWidth && screenshotWidth) {
-                        screenshotConfig.screenWidth = screenshotWidth;
+                        // clone the width array
+                        screenshotConfig.screenWidth = screenshotWidth.slice(0);
                     }
+                }
+                // Ensure screenWidth is an array
+                if (screenshotConfig.screenWidth && !Array.isArray(screenshotConfig.screenWidth)) {
+                    screenshotConfig.screenWidth = [screenshotConfig.screenWidth];
                 }
 
                 // prepare for webdrivercss image
@@ -119,31 +131,47 @@ module.exports = function (runner, options) {
 
                             return {
                                 x:  Math.max( body.scrollWidth, body.offsetWidth, html.clientWidth, html.scrollWidth, html.offsetWidth ),
-                                y:  Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight )
+                                y:  Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight ),
+                                height: window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight,
+                                width: window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
                             };
                         }, [], function(err,res) {
-                            currentScroll = res;
+                            currentScroll = res.value;
+
+                            if (!screenshotConfig.screenWidth || !screenshotConfig.screenWidth.length) {
+                                screenshotConfig.screenWidth = [currentScroll.width];
+                            }
+
+                            async.eachSeries(
+                                screenshotConfig.screenWidth,
+                                function saveScreenshot(width, cb) {
+                                    var suffix = width ? '.' + width + 'px' : '';
+                                    var fileOriginal = screenstory.generatePath(image.capabilities, image.storyId, image.id + suffix + '.png');
+                                    self
+                                        .setViewportSize({ height: currentScroll.height, width: width })
+                                        .saveDocumentScreenshot(fileOriginal, function (err) {
+                                            if (err) { return cb(err); }
+                                            var response = {
+                                                baselinePath: fileOriginal,
+                                                regressionPath: fileOriginal,
+                                                width: width
+                                            };
+                                            screenstory.saveWebdrivercssResponse(image, response, cb);
+                                        });
+                                }, function (err) {
+                                    if (err) { return done(err); }
+                                    restoreScroll(done)();
+                                });
                         });
-                    switch (this.desiredCapabilities.browserName) {
-                        case 'phantomjs':
-                            this
-                                .saveScreenshot(image.fileDocument, function (err) {
-                                    if (err) { return done(err); }
-                                    screenstory.saveWebdrivercssResponse(image, null, restoreScroll(done));
-                                });
-                            break;
-                        default:
-                            this
-                                .saveDocumentScreenshot(image.fileDocument, function (err) {
-                                    if (err) { return done(err); }
-                                    screenstory.saveWebdrivercssResponse(image, null, restoreScroll(done));
-                                });
-                    }
+
                 } else {
+                    if (!screenshotConfig.name) {
+                        screenshotConfig.name = image.id;
+                    }
                     this
                         .webdrivercss(image.id, screenshotConfig, function addToScreenstory(err, response) {
                             if (err) { return done(err); }
-                            screenstory.saveWebdrivercssResponse(image, response, done);
+                            screenstory.saveWebdrivercssResponse(image, response[image.id], done);
                         });
                 }
             } catch (err) {
