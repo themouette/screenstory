@@ -1,3 +1,8 @@
+v0.7.2
+------
+
+* Add --screenshot-update option to update baselines
+
 v0.7.1
 ------
 

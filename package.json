@@ -1,6 +1,6 @@
 {
   "name": "screenstory",
-  "version": "0.7.0",
+  "version": "0.7.2",
   "description": "cross browser screenshots reports",
   "main": "index.js",
   "repository": "https://github.com/themouette/screenstory.git",
