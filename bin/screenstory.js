@@ -35,6 +35,7 @@ program
     .option('--screenshot-width [1024]', 'Specify screen width (px)', collect)
     .option('--screenshot-orientation [PORTRAIT|LANDSCAPE]', 'Specify window resolution (px)', collect)
     .option('--screenshot-diff', 'Compute screenshot diff')
+    .option('--screenshot-update', 'Update baseline')
 
     // selenium related options
     .option('-c, --wd-capabilities <phantomjs>', 'Specify desired capabilities (browserName or id as defined in screenstory.yml)', 'phantomjs')

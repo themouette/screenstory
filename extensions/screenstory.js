@@ -16,6 +16,7 @@ module.exports = function (runner, options) {
     var screenshotOrientations = options.screenshotOrientation || null;
     var projectName = options.projectName || DEFAULT_PROJECT_NAME;
     var adminPanel = options.adminPanel ? options.adminPanel + '/api/repositories/' : null;
+    var updateBaseline = options.updateBaseline;
 
     if (screenshotWidth && !Array.isArray(screenshotWidth)) {
         screenshotWidth = [screenshotWidth];
@@ -42,6 +43,7 @@ module.exports = function (runner, options) {
             webdrivercss.init(client, {
                 screenshotRoot: storyRoot,
                 api: adminPanel,
+                updateBaseline: updateBaseline,
                 screenWidth: screenshotWidth.slice(0) // clone the array
             });
             debug('setup webdrivercss "%s"', storyTitle);

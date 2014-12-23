@@ -19,6 +19,8 @@ project:
         # should the screenshots be compared
         # with previous version
         diff:           false
+        # Should the baseline images be updated ?
+        update:         false
     wd:
         # default capabilities to use
         # See capabilities
